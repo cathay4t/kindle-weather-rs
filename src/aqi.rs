@@ -14,3 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 // Author: Gris Ge <cnfourt@gmail.com>
+
+pub fn aqi_get(api_key: &str,
+    longtitude: &str,
+    latitude: &str) -> u32 {
+    return 68u32;
+}
+

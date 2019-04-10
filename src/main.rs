@@ -16,30 +16,35 @@
 // Author: Gris Ge <cnfourt@gmail.com>
 
 mod aqi;
-mod bible;
 mod http;
 mod sci;
+mod svg_data;
 mod weather;
 
+extern crate chrono;
 extern crate clap;
 extern crate dirs;
 extern crate reqwest;
 extern crate serde;
 extern crate serde_json;
+extern crate strfmt;
 extern crate toml;
 
-use bible::bible_get;
+use aqi::aqi_get;
+use chrono::{Local, Duration};
 use clap::{App, Arg};
 use sci::sci_get;
 use serde::Deserialize;
+use std::collections::HashMap;
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Write};
+use strfmt::strfmt;
+use svg_data::KINDLE_WEATHER_SVG;
 use weather::weather_get;
 
 #[derive(Debug, Deserialize)]
 struct KindleWeatherConfig {
-    heweather_api: String,
-    aqi_city_name: String,
+    heweather_key: String,
     output_file: String,
     latitude: String,
     longtitude: String,
@@ -48,8 +53,7 @@ struct KindleWeatherConfig {
 impl ::std::default::Default for KindleWeatherConfig {
     fn default() -> Self {
         Self {
-            heweather_api: "".into(),
-            aqi_city_name: "".into(),
+            heweather_key: "".into(),
             output_file: "/tmp/kindle_weather.png".into(),
             latitude: "".into(),
             longtitude: "".into(),
@@ -83,11 +87,40 @@ fn main() {
     let cfg: KindleWeatherConfig =
         toml::from_str(&contents).expect("Failed to parse config file");
 
-    println!("{:?}", cfg);
-    //    println!("{:?}", bible_get());
-    //    println!("sci: {:?}", sci_get());
-    println!(
-        "weather: {:?}",
-        weather_get(&cfg.heweather_api, &cfg.longtitude, &cfg.latitude)
+    let d0 = Local::now();
+    let d1 = d0 + Duration::days(1);
+    let d2 = d0 + Duration::days(2);
+    let weather_data =
+        weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
+    let mut vars = HashMap::new();
+    vars.insert(
+        "AQI".to_string(),
+        format!(
+            "{}",
+            aqi_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude)
+        ),
     );
+    let sci_data = sci_get();
+    vars.insert(
+        "TIME".to_string(),
+        format!("{}", d0.format("%b %d %a %H:%M")),
+    );
+
+    vars.insert("SCI".to_string(), format!("{}", sci_data[0]));
+    vars.insert("SCHG".to_string(), format!("{:.2}%", sci_data[1] * 100f32));
+    vars.insert("D0".to_string(), format!("{}", d0.format("%a")));
+    vars.insert("D1".to_string(), format!("{}", d1.format("%a")));
+    vars.insert("D2".to_string(), format!("{}", d2.format("%a")));
+    vars.insert("H0".to_string(), format!("{}", weather_data[0].temp_max));
+    vars.insert("H0".to_string(), format!("{}", weather_data[0].temp_max));
+    vars.insert("H1".to_string(), format!("{}", weather_data[1].temp_max));
+    vars.insert("H2".to_string(), format!("{}", weather_data[2].temp_max));
+    vars.insert("L0".to_string(), format!("{}", weather_data[0].temp_min));
+    vars.insert("L1".to_string(), format!("{}", weather_data[1].temp_min));
+    vars.insert("L2".to_string(), format!("{}", weather_data[2].temp_min));
+    let svg_data = strfmt(KINDLE_WEATHER_SVG, &vars).unwrap();
+    let mut svg_fd =
+        File::create(&cfg.output_file).expect("Failed to create svg file");
+    svg_fd.write_all(svg_data.as_bytes()).unwrap();
+    println!("{}", &cfg.output_file);
 }

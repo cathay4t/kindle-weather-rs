@@ -16,17 +16,14 @@
 // Author: Gris Ge <cnfourt@gmail.com>
 
 use super::http::http_get;
-use serde_json::Value;
+use serde::Deserialize;
+use serde_json::{Map, Value};
 
 #[derive(Debug)]
 pub struct WeatherData {
-    condition: String, // Changed to enum
-    temp_max: i32,
-    temp_min: i32,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct HeWeatherRet {
+    pub condition: String, // Changed to enum
+    pub temp_max: i32,
+    pub temp_min: i32,
 }
 
 static _API_URL: &str = "https://free-api.heweather.com/s6/weather/forecast";
@@ -44,24 +41,59 @@ pub fn weather_get(
         KEY = api_key,
     );
 
-    let ret: Value = serde_json::from_str(&http_get(&url)).unwrap();
-    println!("url: {}", url);
-    println!("{:?}", ret);
+    let ret: Map<String, Value> =
+        serde_json::from_str(&http_get(&url)).unwrap();
+    let forcasts = ret["HeWeather6"][0]["daily_forecast"].as_array().unwrap();
+    let condition_string_d0 = "cond_txt_d";
+    // ^ TODO: Use `cond_txt_n` after 18:00
     [
         WeatherData {
-            condition: "clear sky".into(),
-            temp_max: 0,
-            temp_min: 0,
+            condition: format!(
+                "{}",
+                forcasts[0][condition_string_d0].as_str().unwrap()
+            ),
+            temp_max: forcasts[0]["tmp_max"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
+            temp_min: forcasts[0]["tmp_min"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
         },
         WeatherData {
-            condition: "clear sky".into(),
-            temp_max: 0,
-            temp_min: 0,
+            condition: format!(
+                "{}",
+                forcasts[1]["cond_txt_d"].as_str().unwrap()
+            ),
+            temp_max: forcasts[1]["tmp_max"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
+            temp_min: forcasts[1]["tmp_min"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
         },
         WeatherData {
-            condition: "clear sky".into(),
-            temp_max: 0,
-            temp_min: 0,
+            condition: format!(
+                "{}",
+                forcasts[2]["cond_txt_d"].as_str().unwrap()
+            ),
+            temp_max: forcasts[2]["tmp_max"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
+            temp_min: forcasts[2]["tmp_min"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
         },
     ]
 }
