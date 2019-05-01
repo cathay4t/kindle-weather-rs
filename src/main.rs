@@ -31,20 +31,24 @@ extern crate strfmt;
 extern crate toml;
 
 use aqi::aqi_get;
-use chrono::{Local, Duration};
+use chrono::{Duration, Local};
 use clap::{App, Arg};
 use sci::sci_get;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write};
+use std::process::Command;
 use strfmt::strfmt;
 use svg_data::KINDLE_WEATHER_SVG;
 use weather::weather_get;
 
 #[derive(Debug, Deserialize)]
 struct KindleWeatherConfig {
+    #[serde(default)]
+    icons_folder: String,
     heweather_key: String,
+    #[serde(default)]
     output_file: String,
     latitude: String,
     longtitude: String,
@@ -52,7 +56,14 @@ struct KindleWeatherConfig {
 
 impl ::std::default::Default for KindleWeatherConfig {
     fn default() -> Self {
+        let home_path = match dirs::home_dir() {
+            Some(p) => p.to_str().unwrap().to_string(),
+            None => panic!("Failed to get $HOME path"),
+        };
+        let default_icons_folder =
+            format!("{}/.config/kindle_weather/icons", home_path);
         Self {
+            icons_folder: "".into(),
             heweather_key: "".into(),
             output_file: "/tmp/kindle_weather.png".into(),
             latitude: "".into(),
@@ -66,7 +77,10 @@ fn main() {
         Some(p) => p.to_str().unwrap().to_string(),
         None => panic!("Failed to get $HOME path"),
     };
-    let default_cfg_path = format!("{}/.config/kindle_weather.cfg", home_path);
+    let default_cfg_path =
+        format!("{}/.config/kindle_weather/kindle_weather.cfg", home_path);
+    let default_icons_folder =
+        format!("{}/.config/kindle_weather/icons", home_path);
     let matches = App::new("kindle_weather")
         .version("0.1")
         .author("Gris Ge <cnfourt@gmail.com>")
@@ -91,7 +105,8 @@ fn main() {
     let d1 = d0 + Duration::days(1);
     let d2 = d0 + Duration::days(2);
     let weather_data =
-        weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
+        weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude,
+                    &cfg.icons_folder);
     let mut vars = HashMap::new();
     vars.insert(
         "AQI".to_string(),

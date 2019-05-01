@@ -16,14 +16,33 @@
 // Author: Gris Ge <cnfourt@gmail.com>
 
 use super::http::http_get;
+use chrono::Local;
 use serde::Deserialize;
 use serde_json::{Map, Value};
 
 #[derive(Debug)]
 pub struct WeatherData {
-    pub condition: String, // Changed to enum
+    pub condition: String,
+    pub svg_data: String,
     pub temp_max: i32,
     pub temp_min: i32,
+}
+
+impl WeatherData {
+    fn new(
+        icons_folder: &str,
+        condition: String,
+        temp_max: i32,
+        temp_min: i32,
+    ) -> WeatherData {
+        let svg_data = String::new();
+        WeatherData {
+            condition,
+            svg_data,
+            temp_max,
+            temp_min
+        }
+    }
 }
 
 static _API_URL: &str = "https://free-api.heweather.com/s6/weather/forecast";
@@ -32,6 +51,7 @@ pub fn weather_get(
     api_key: &str,
     longtitude: &str,
     latitude: &str,
+    icons_folder: &str,
 ) -> [WeatherData; 3] {
     let url = format!(
         "{API_URL}?location={LON},{LAT}&key={KEY}&lang=en",
@@ -44,56 +64,56 @@ pub fn weather_get(
     let ret: Map<String, Value> =
         serde_json::from_str(&http_get(&url)).unwrap();
     let forcasts = ret["HeWeather6"][0]["daily_forecast"].as_array().unwrap();
-    let condition_string_d0 = "cond_txt_d";
+    let now = Local::now();
+    let night = Local::today().and_hms(17, 0, 0);
+    let condition_string_d0 = match now > night {
+        true => "cond_txt_n",
+        false => "cond_txt_d",
+    };
+
     // ^ TODO: Use `cond_txt_n` after 18:00
     [
-        WeatherData {
-            condition: format!(
-                "{}",
-                forcasts[0][condition_string_d0].as_str().unwrap()
-            ),
-            temp_max: forcasts[0]["tmp_max"]
+        WeatherData::new(
+            icons_folder,
+            format!("{}", forcasts[0][condition_string_d0] .as_str() .unwrap()),
+            forcasts[0]["tmp_max"]
                 .as_str()
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
-            temp_min: forcasts[0]["tmp_min"]
+            forcasts[0]["tmp_min"]
                 .as_str()
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
-        },
-        WeatherData {
-            condition: format!(
-                "{}",
-                forcasts[1]["cond_txt_d"].as_str().unwrap()
-            ),
-            temp_max: forcasts[1]["tmp_max"]
+        ),
+        WeatherData::new(
+            icons_folder,
+            format!("{}", forcasts[1]["cond_txt_d"].as_str() .unwrap()),
+            forcasts[1]["tmp_max"]
                 .as_str()
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
-            temp_min: forcasts[1]["tmp_min"]
+            forcasts[1]["tmp_min"]
                 .as_str()
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
-        },
-        WeatherData {
-            condition: format!(
-                "{}",
-                forcasts[2]["cond_txt_d"].as_str().unwrap()
-            ),
-            temp_max: forcasts[2]["tmp_max"]
+        ),
+        WeatherData::new(
+            icons_folder,
+            format!("{}", forcasts[2]["cond_txt_d"].as_str() .unwrap()),
+            forcasts[2]["tmp_max"]
                 .as_str()
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
-            temp_min: forcasts[2]["tmp_min"]
+            forcasts[2]["tmp_min"]
                 .as_str()
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
-        },
+        ),
     ]
 }
