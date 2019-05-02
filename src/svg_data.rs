@@ -15,59 +15,75 @@
 //
 // Author: Gris Ge <cnfourt@gmail.com>
 
-pub static KINDLE_WEATHER_SVG: &str = r###"<svg xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
+pub static KINDLE_WEATHER_SVG: &str = r###"<svg
+xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
      xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g font-family="DejaVu Sans" style="text-anchor:middle;">
+    <g font-family="DejaVu Sans" style="text-anchor:start;">
         <g>
-           <text font-size="30px" x="200" y="40">
+           <text font-size="30px" x="250" y="40" style="text-anchor:middle;">
            {TIME}
            </text>
-           <text font-size="30px" x="200" y="90">
+           <text font-size="30px" x="10" y="90">
            AQI: {AQI} ({AQI_MAIN})
            </text>
-           <text font-size="30px" x="200" y="140">
+           <text font-size="30px" x="10" y="140">
            SCI: {SCI} {SCHG}
+           </text>
+           <text font-size="30px" x="10" y="190">
+           {TZ1_NAME}:
+           </text>
+           <text font-size="30px" x="300" y="190">
+           {TZ1_TIME}
+           </text>
+           <text font-size="30px" x="10" y="240">
+           {TZ2_NAME}:
+           </text>
+           <text font-size="30px" x="300" y="240">
+           {TZ2_TIME}
+           </text>
+           <text font-size="30px" x="10" y="290">
+           Sunrise:
+           </text>
+           <text font-size="30px" x="300" y="290">
+           {SUNRISE}
+           </text>
+           <text font-size="30px" x="10" y="340">
+           Sunset:
+           </text>
+           <text font-size="30px" x="300" y="340">
+           {SUNSET}
            </text>
         </g>
         <g transform="translate(500, 0)">
-            <text font-size="30px" x="150" y="25">
-            {D0}
-            </text>
-            <text font-size="40px" x="10" y="80" style="text-anchor:start;">
+            <text font-size="30px" x="10" y="80">
             {C0}
             </text>
-            <text font-size="40px" x="10" y="140" style="text-anchor:start;">
+            <text font-size="30px" x="10" y="140">
             {H0}°C
             </text>
-            <text font-size="40px" x="150" y="140" style="text-anchor:start;">
+            <text font-size="30px" x="150" y="140">
             {L0}°C
             </text>
         </g>
         <g transform="translate(500, 170)">
-            <text font-size="30px" x="150" y="25">
-            {D1}
-            </text>
-            <text font-size="40px" x="10" y="80" style="text-anchor:start;">
+            <text font-size="30px" x="10" y="80">
             {C1}
             </text>
-            <text font-size="40px" x="10" y="140" style="text-anchor:start;">
+            <text font-size="30px" x="10" y="140">
             {H1}°C
             </text>
-            <text font-size="40px" x="150" y="140" style="text-anchor:start;">
+            <text font-size="30px" x="150" y="140">
             {L1}°C
             </text>
         </g>
         <g transform="translate(500, 340)">
-            <text font-size="30px" x="150" y="25">
-            {D2}
-            </text>
-            <text font-size="40px" x="10" y="80" style="text-anchor:start;">
+            <text font-size="30px" x="10" y="25">
             {C2}
             </text>
-            <text font-size="40px" x="10" y="140" style="text-anchor:start;">
+            <text font-size="30px" x="10" y="140">
             {H2}°C
             </text>
-            <text font-size="40px" x="150" y="140" style="text-anchor:start;">
+            <text font-size="30px" x="150" y="140">
             {L2}°C
             </text>
         </g>

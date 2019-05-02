@@ -20,8 +20,10 @@ mod http;
 mod sci;
 mod svg_data;
 mod weather;
+mod sun;
 
 extern crate chrono;
+extern crate chrono_tz;
 extern crate clap;
 extern crate dirs;
 extern crate regex;
@@ -33,6 +35,7 @@ extern crate toml;
 
 use aqi::aqi_get;
 use chrono::{Duration, Local};
+use chrono_tz::Tz;
 use clap::{App, Arg};
 use sci::sci_get;
 use serde::Deserialize;
@@ -52,6 +55,10 @@ struct KindleWeatherConfig {
     output_file: String,
     latitude: String,
     longtitude: String,
+    #[serde(rename = "TZ1")]
+    tz1: String,
+    #[serde(rename = "TZ2")]
+    tz2: String,
 }
 
 impl ::std::default::Default for KindleWeatherConfig {
@@ -62,8 +69,16 @@ impl ::std::default::Default for KindleWeatherConfig {
             output_file: "/tmp/kindle_weather.png".into(),
             latitude: "".into(),
             longtitude: "".into(),
+            tz1: "".into(),
+            tz2: "".into(),
         }
     }
+}
+
+fn get_time(tz_str: &str) -> String {
+    let now = Local::now();
+    let tz: Tz = tz_str.parse().unwrap();
+    format!("{}", now.with_timezone(&tz).format("%H:%M"))
 }
 
 fn main() {
@@ -92,9 +107,9 @@ fn main() {
     let cfg: KindleWeatherConfig =
         toml::from_str(&contents).expect("Failed to parse config file");
 
-    let d0 = Local::now();
-    let d1 = d0 + Duration::days(1);
-    let d2 = d0 + Duration::days(2);
+    let now = Local::now();
+    let d1 = now + Duration::days(1);
+    let d2 = now + Duration::days(2);
     let weather_data =
         weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
     let mut vars = HashMap::new();
@@ -105,14 +120,10 @@ fn main() {
     let sci_data = sci_get();
     vars.insert(
         "TIME".to_string(),
-        format!("{}", d0.format("%b %d %a %H:%M")),
+        format!("{}", now.format("%b %d %a %H:%M")),
     );
-
     vars.insert("SCI".to_string(), format!("{}", sci_data[0]));
     vars.insert("SCHG".to_string(), format!("{:.2}%", sci_data[1] * 100f32));
-    vars.insert("D0".to_string(), format!("{}", d0.format("%a")));
-    vars.insert("D1".to_string(), format!("{}", d1.format("%a")));
-    vars.insert("D2".to_string(), format!("{}", d2.format("%a")));
     vars.insert("H0".to_string(), format!("{}", weather_data[0].temp_max));
     vars.insert("H0".to_string(), format!("{}", weather_data[0].temp_max));
     vars.insert("H1".to_string(), format!("{}", weather_data[1].temp_max));
@@ -123,6 +134,15 @@ fn main() {
     vars.insert("C0".to_string(), format!("{}", weather_data[0].condition));
     vars.insert("C1".to_string(), format!("{}", weather_data[1].condition));
     vars.insert("C2".to_string(), format!("{}", weather_data[2].condition));
+    vars.insert("TZ1_NAME".to_string(), format!("{}", &cfg.tz1));
+    vars.insert("TZ1_TIME".to_string(), get_time(&cfg.tz1));
+    vars.insert("TZ2_NAME".to_string(), format!("{}", &cfg.tz2));
+    vars.insert("TZ2_TIME".to_string(), get_time(&cfg.tz2));
+    let (sunrise, sunset) = sun::sun_rise_set_get(&cfg.heweather_key,
+                                                 &cfg.longtitude,
+                                                 &cfg.latitude);
+    vars.insert("SUNRISE".to_string(), sunrise);
+    vars.insert("SUNSET".to_string(), sunset);
     let svg_data = strfmt(KINDLE_WEATHER_SVG, &vars).unwrap();
     let mut svg_fd =
         File::create(&cfg.output_file).expect("Failed to create svg file");
