@@ -17,30 +17,37 @@
 
 use super::http::http_get;
 use chrono::Local;
-use serde::Deserialize;
+use regex::Regex;
 use serde_json::{Map, Value};
 
 #[derive(Debug)]
 pub struct WeatherData {
     pub condition: String,
-    pub svg_data: String,
     pub temp_max: i32,
     pub temp_min: i32,
 }
 
 impl WeatherData {
-    fn new(
-        icons_folder: &str,
-        condition: String,
-        temp_max: i32,
-        temp_min: i32,
-    ) -> WeatherData {
-        let svg_data = String::new();
+    fn new_from_he_forcast(forcast: &Value, is_night: bool) -> WeatherData {
+        let condition_string = match is_night {
+            true => "cond_txt_n",
+            false => "cond_txt_d",
+        };
         WeatherData {
-            condition,
-            svg_data,
-            temp_max,
-            temp_min
+            condition: format!(
+                "{}",
+                forcast[condition_string].as_str().unwrap()
+            ),
+            temp_max: forcast["tmp_max"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
+            temp_min: forcast["tmp_min"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
         }
     }
 }
@@ -51,7 +58,6 @@ pub fn weather_get(
     api_key: &str,
     longtitude: &str,
     latitude: &str,
-    icons_folder: &str,
 ) -> [WeatherData; 3] {
     let url = format!(
         "{API_URL}?location={LON},{LAT}&key={KEY}&lang=en",
@@ -66,54 +72,10 @@ pub fn weather_get(
     let forcasts = ret["HeWeather6"][0]["daily_forecast"].as_array().unwrap();
     let now = Local::now();
     let night = Local::today().and_hms(17, 0, 0);
-    let condition_string_d0 = match now > night {
-        true => "cond_txt_n",
-        false => "cond_txt_d",
-    };
 
-    // ^ TODO: Use `cond_txt_n` after 18:00
     [
-        WeatherData::new(
-            icons_folder,
-            format!("{}", forcasts[0][condition_string_d0] .as_str() .unwrap()),
-            forcasts[0]["tmp_max"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-            forcasts[0]["tmp_min"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-        ),
-        WeatherData::new(
-            icons_folder,
-            format!("{}", forcasts[1]["cond_txt_d"].as_str() .unwrap()),
-            forcasts[1]["tmp_max"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-            forcasts[1]["tmp_min"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-        ),
-        WeatherData::new(
-            icons_folder,
-            format!("{}", forcasts[2]["cond_txt_d"].as_str() .unwrap()),
-            forcasts[2]["tmp_max"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-            forcasts[2]["tmp_min"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-        ),
+        WeatherData::new_from_he_forcast(&forcasts[0], now > night),
+        WeatherData::new_from_he_forcast(&forcasts[1], false),
+        WeatherData::new_from_he_forcast(&forcasts[2], false),
     ]
 }

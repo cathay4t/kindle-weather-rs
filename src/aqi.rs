@@ -15,9 +15,32 @@
 //
 // Author: Gris Ge <cnfourt@gmail.com>
 
-pub fn aqi_get(api_key: &str,
-    longtitude: &str,
-    latitude: &str) -> u32 {
-    return 68u32;
-}
+use super::http::http_get;
+use serde_json::{Map, Value};
 
+static _API_URL: &str = "http://api.waqi.info/feed";
+
+pub fn aqi_get(
+    api_key: &str,
+    longtitude: &str,
+    latitude: &str,
+) -> (u32, String) {
+    let url = format!(
+        "{API_URL}/geo:{LAT};{LON}/?token={KEY}",
+        API_URL = _API_URL,
+        LON = longtitude,
+        LAT = latitude,
+        KEY = api_key,
+    );
+    let ret: Map<String, Value> =
+        serde_json::from_str(&http_get(&url)).unwrap();
+    (
+        ret["data"]["aqi"].as_u64().unwrap() as u32,
+        format!(
+            "{}",
+            ret["data"]["dominentpol"]
+                .as_str()
+                .unwrap()
+        ),
+    )
+}
