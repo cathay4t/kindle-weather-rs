@@ -17,7 +17,6 @@
 
 use super::http::http_get;
 use chrono::Local;
-use regex::Regex;
 use serde_json::{Map, Value};
 
 #[derive(Debug)]

@@ -20,70 +20,70 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
      xmlns:xlink="http://www.w3.org/1999/xlink">
     <g font-family="DejaVu Sans" style="text-anchor:start;">
         <g>
-           <text font-size="30px" x="250" y="40" style="text-anchor:middle;">
+           <text font-size="40px" x="250" y="40" style="text-anchor:middle;">
            {TIME}
            </text>
-           <text font-size="30px" x="10" y="90">
+           <text font-size="40px" x="10" y="90">
            AQI: {AQI} ({AQI_MAIN})
            </text>
-           <text font-size="30px" x="10" y="140">
+           <text font-size="40px" x="10" y="140">
            SCI: {SCI} {SCHG}
            </text>
-           <text font-size="30px" x="10" y="190">
+           <text font-size="40px" x="10" y="190">
            {TZ1_NAME}:
            </text>
-           <text font-size="30px" x="300" y="190">
+           <text font-size="40px" x="350" y="190">
            {TZ1_TIME}
            </text>
-           <text font-size="30px" x="10" y="240">
+           <text font-size="40px" x="10" y="240">
            {TZ2_NAME}:
            </text>
-           <text font-size="30px" x="300" y="240">
+           <text font-size="40px" x="350" y="240">
            {TZ2_TIME}
            </text>
-           <text font-size="30px" x="10" y="290">
+           <text font-size="40px" x="10" y="290">
            Sunrise:
            </text>
-           <text font-size="30px" x="300" y="290">
+           <text font-size="40px" x="350" y="290">
            {SUNRISE}
            </text>
-           <text font-size="30px" x="10" y="340">
+           <text font-size="40px" x="10" y="350">
            Sunset:
            </text>
-           <text font-size="30px" x="300" y="340">
+           <text font-size="40px" x="350" y="350">
            {SUNSET}
            </text>
         </g>
         <g transform="translate(500, 0)">
-            <text font-size="30px" x="10" y="80">
+            <text font-size="40px" x="10" y="60">
             {C0}
             </text>
-            <text font-size="30px" x="10" y="140">
+            <text font-size="40px" x="10" y="140">
             {H0}°C
             </text>
-            <text font-size="30px" x="150" y="140">
+            <text font-size="40px" x="150" y="140">
             {L0}°C
             </text>
         </g>
         <g transform="translate(500, 170)">
-            <text font-size="30px" x="10" y="80">
+            <text font-size="40px" x="10" y="60">
             {C1}
             </text>
-            <text font-size="30px" x="10" y="140">
+            <text font-size="40px" x="10" y="140">
             {H1}°C
             </text>
-            <text font-size="30px" x="150" y="140">
+            <text font-size="40px" x="150" y="140">
             {L1}°C
             </text>
         </g>
-        <g transform="translate(500, 340)">
-            <text font-size="30px" x="10" y="25">
+        <g transform="translate(500, 350)">
+            <text font-size="40px" x="10" y="60">
             {C2}
             </text>
-            <text font-size="30px" x="10" y="140">
+            <text font-size="40px" x="10" y="140">
             {H2}°C
             </text>
-            <text font-size="30px" x="150" y="140">
+            <text font-size="40px" x="150" y="140">
             {L2}°C
             </text>
         </g>

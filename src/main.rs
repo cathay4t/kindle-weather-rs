@@ -18,15 +18,14 @@
 mod aqi;
 mod http;
 mod sci;
+mod sun;
 mod svg_data;
 mod weather;
-mod sun;
 
 extern crate chrono;
 extern crate chrono_tz;
 extern crate clap;
 extern crate dirs;
-extern crate regex;
 extern crate reqwest;
 extern crate serde;
 extern crate serde_json;
@@ -34,7 +33,7 @@ extern crate strfmt;
 extern crate toml;
 
 use aqi::aqi_get;
-use chrono::{Duration, Local};
+use chrono::Local;
 use chrono_tz::Tz;
 use clap::{App, Arg};
 use sci::sci_get;
@@ -46,6 +45,10 @@ use std::process::Command;
 use strfmt::strfmt;
 use svg_data::KINDLE_WEATHER_SVG;
 use weather::weather_get;
+
+const TMP_SVG_FILE_PATH: &str = "/tmp/kindle_weather.svg";
+const TMP_PNG_FILE_PATH: &str = "/tmp/_kindle_weather.png";
+const TMP_PNG_FILE_PATH2: &str = "/tmp/__kindle_weather.png";
 
 #[derive(Debug, Deserialize)]
 struct KindleWeatherConfig {
@@ -59,6 +62,8 @@ struct KindleWeatherConfig {
     tz1: String,
     #[serde(rename = "TZ2")]
     tz2: String,
+    #[serde(default)]
+    rotation: String,
 }
 
 impl ::std::default::Default for KindleWeatherConfig {
@@ -71,6 +76,7 @@ impl ::std::default::Default for KindleWeatherConfig {
             longtitude: "".into(),
             tz1: "".into(),
             tz2: "".into(),
+            rotation: "right".into(),
         }
     }
 }
@@ -108,8 +114,6 @@ fn main() {
         toml::from_str(&contents).expect("Failed to parse config file");
 
     let now = Local::now();
-    let d1 = now + Duration::days(1);
-    let d2 = now + Duration::days(2);
     let weather_data =
         weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
     let mut vars = HashMap::new();
@@ -122,7 +126,7 @@ fn main() {
         "TIME".to_string(),
         format!("{}", now.format("%b %d %a %H:%M")),
     );
-    vars.insert("SCI".to_string(), format!("{}", sci_data[0]));
+    vars.insert("SCI".to_string(), format!("{:.2}", sci_data[0]));
     vars.insert("SCHG".to_string(), format!("{:.2}%", sci_data[1] * 100f32));
     vars.insert("H0".to_string(), format!("{}", weather_data[0].temp_max));
     vars.insert("H0".to_string(), format!("{}", weather_data[0].temp_max));
@@ -138,14 +142,43 @@ fn main() {
     vars.insert("TZ1_TIME".to_string(), get_time(&cfg.tz1));
     vars.insert("TZ2_NAME".to_string(), format!("{}", &cfg.tz2));
     vars.insert("TZ2_TIME".to_string(), get_time(&cfg.tz2));
-    let (sunrise, sunset) = sun::sun_rise_set_get(&cfg.heweather_key,
-                                                 &cfg.longtitude,
-                                                 &cfg.latitude);
+    let (sunrise, sunset) = sun::sun_rise_set_get(
+        &cfg.heweather_key,
+        &cfg.longtitude,
+        &cfg.latitude,
+    );
     vars.insert("SUNRISE".to_string(), sunrise);
     vars.insert("SUNSET".to_string(), sunset);
     let svg_data = strfmt(KINDLE_WEATHER_SVG, &vars).unwrap();
     let mut svg_fd =
-        File::create(&cfg.output_file).expect("Failed to create svg file");
+        File::create(TMP_SVG_FILE_PATH).expect("Failed to create svg file");
     svg_fd.write_all(svg_data.as_bytes()).unwrap();
+    Command::new("rsvg-convert")
+        .args(&[
+            "--background-color=white",
+            "-o",
+            TMP_PNG_FILE_PATH,
+            TMP_SVG_FILE_PATH,
+        ])
+        .status()
+        .expect("Failed to run rsvg-convert");
+    Command::new("pngcrush")
+        .args(&["-c", "0", "-ow", TMP_PNG_FILE_PATH, TMP_PNG_FILE_PATH2])
+        .status()
+        .expect("Failed to run pngcrush");
+    let rotation_degree: &str = match cfg.rotation.as_ref() {
+        "right" => "270",
+        "left" => "90",
+        _ => panic!("Invalid rotation configuration"),
+    };
+    Command::new("convert")
+        .args(&[
+            TMP_PNG_FILE_PATH,
+            "-rotate",
+            rotation_degree,
+            &cfg.output_file,
+        ])
+        .status()
+        .expect("Failed to run pngcrush");
     println!("{}", &cfg.output_file);
 }

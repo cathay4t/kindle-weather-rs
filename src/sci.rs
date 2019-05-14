@@ -16,7 +16,6 @@
 // Author: Gris Ge <cnfourt@gmail.com>
 
 use super::http::http_get;
-use serde_json::Value;
 
 static _API_URL: &str = "http://hq.sinajs.cn/list=sh000001";
 
