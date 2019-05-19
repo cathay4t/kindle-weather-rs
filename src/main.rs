@@ -16,6 +16,7 @@
 // Author: Gris Ge <cnfourt@gmail.com>
 
 mod aqi;
+mod fund;
 mod http;
 mod sci;
 mod sun;
@@ -27,6 +28,7 @@ extern crate chrono_tz;
 extern crate clap;
 extern crate dirs;
 extern crate reqwest;
+extern crate select;
 extern crate serde;
 extern crate serde_json;
 extern crate strfmt;
@@ -64,6 +66,10 @@ struct KindleWeatherConfig {
     tz2: String,
     #[serde(default)]
     rotation: String,
+    #[serde(rename = "FUND1")]
+    fund1: String,
+    #[serde(rename = "FUND2")]
+    fund2: String,
 }
 
 impl ::std::default::Default for KindleWeatherConfig {
@@ -77,6 +83,8 @@ impl ::std::default::Default for KindleWeatherConfig {
             tz1: "".into(),
             tz2: "".into(),
             rotation: "right".into(),
+            fund1: "".into(),
+            fund2: "".into(),
         }
     }
 }
@@ -149,6 +157,12 @@ fn main() {
     );
     vars.insert("SUNRISE".to_string(), sunrise);
     vars.insert("SUNSET".to_string(), sunset);
+    let (fund1_name, fund1_value) = fund::fund_get(&cfg.fund1);
+    let (fund2_name, fund2_value) = fund::fund_get(&cfg.fund2);
+    vars.insert("FUND1_NAME".to_string(), fund1_name);
+    vars.insert("FUND1_VALUE".to_string(), fund1_value);
+    vars.insert("FUND2_NAME".to_string(), fund2_name);
+    vars.insert("FUND2_VALUE".to_string(), fund2_value);
     let svg_data = strfmt(KINDLE_WEATHER_SVG, &vars).unwrap();
     let mut svg_fd =
         File::create(TMP_SVG_FILE_PATH).expect("Failed to create svg file");

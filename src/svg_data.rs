@@ -47,11 +47,23 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
            <text font-size="40px" x="350" y="290">
            {SUNRISE}
            </text>
-           <text font-size="40px" x="10" y="350">
+           <text font-size="40px" x="10" y="340">
            Sunset:
            </text>
-           <text font-size="40px" x="350" y="350">
+           <text font-size="40px" x="350" y="340">
            {SUNSET}
+           </text>
+           <text font-size="40px" x="10" y="390">
+           {FUND1_NAME}
+           </text>
+           <text font-size="40px" x="10" y="440">
+           {FUND1_VALUE}
+           </text>
+           <text font-size="40px" x="10" y="490">
+           {FUND2_NAME}
+           </text>
+           <text font-size="40px" x="10" y="540">
+           {FUND2_VALUE}
            </text>
         </g>
         <g transform="translate(500, 0)">
