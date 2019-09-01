@@ -59,7 +59,7 @@ pub fn weather_get(
     latitude: &str,
 ) -> [WeatherData; 3] {
     let url = format!(
-        "{API_URL}?location={LON},{LAT}&key={KEY}&lang=en",
+        "{API_URL}?location={LON},{LAT}&key={KEY}&lang=zh",
         API_URL = _API_URL,
         LON = longtitude,
         LAT = latitude,
