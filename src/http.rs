@@ -26,5 +26,6 @@ pub fn http_get(url: &str) -> String {
         .unwrap()
         .text()
         .unwrap();
+    println!("url {}", url);
     ret.to_string()
 }

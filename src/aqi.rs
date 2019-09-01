@@ -32,15 +32,15 @@ pub fn aqi_get(
         LAT = latitude,
         KEY = api_key,
     );
-    let ret: Map<String, Value> =
-        serde_json::from_str(&http_get(&url)).unwrap();
-    (
-        ret["data"]["aqi"].as_u64().unwrap() as u32,
-        format!(
-            "{}",
-            ret["data"]["dominentpol"]
-                .as_str()
-                .unwrap()
+    let html_data = http_get(&url);
+    match serde_json::from_str::<Map<String, Value>>(&html_data) {
+        Ok(ret) => (
+            ret["data"]["aqi"].as_u64().unwrap() as u32,
+            format!("{}", ret["data"]["dominentpol"].as_str().unwrap()),
         ),
-    )
+        Err(e) => {
+            println!("AQI retrieve failure, error {}\n{}", e, &html_data);
+            (0u32, format!("N/A"))
+        }
+    }
 }
