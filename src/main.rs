@@ -36,6 +36,7 @@ extern crate toml;
 
 use aqi::aqi_get;
 use chrono::Local;
+use chrono::Duration;
 use chrono_tz::Tz;
 use clap::{App, Arg};
 use sci::sci_get;
@@ -150,6 +151,11 @@ fn main() {
     vars.insert("TZ1_TIME".to_string(), get_time(&cfg.tz1));
     vars.insert("TZ2_NAME".to_string(), format!("{}", &cfg.tz2));
     vars.insert("TZ2_TIME".to_string(), get_time(&cfg.tz2));
+    vars.insert("DAY0".to_string(), format!("{}", now.format("%a")));
+    let day1 = now + Duration::days(1);
+    vars.insert("DAY1".to_string(), format!("{}", day1.format("%a")));
+    let day2 = now + Duration::days(2);
+    vars.insert("DAY2".to_string(), format!("{}", day2.format("%a")));
     let (sunrise, sunset) = sun::sun_rise_set_get(
         &cfg.heweather_key,
         &cfg.longtitude,
@@ -193,6 +199,6 @@ fn main() {
             &cfg.output_file,
         ])
         .status()
-        .expect("Failed to run pngcrush");
+        .expect("Failed to run convert");
     println!("{}", &cfg.output_file);
 }

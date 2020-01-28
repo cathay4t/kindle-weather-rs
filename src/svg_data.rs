@@ -68,7 +68,7 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
         </g>
         <g transform="translate(500, 0)">
             <text font-size="40px" x="10" y="60">
-            {C0}
+            {DAY0} {C0}
             </text>
             <text font-size="40px" x="10" y="140">
             {H0}°C
@@ -79,7 +79,7 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
         </g>
         <g transform="translate(500, 170)">
             <text font-size="40px" x="10" y="60">
-            {C1}
+            {DAY1} {C1}
             </text>
             <text font-size="40px" x="10" y="140">
             {H1}°C
@@ -90,7 +90,7 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
         </g>
         <g transform="translate(500, 350)">
             <text font-size="40px" x="10" y="60">
-            {C2}
+            {DAY2} {C2}
             </text>
             <text font-size="40px" x="10" y="140">
             {H2}°C
