@@ -18,11 +18,7 @@
 use reqwest;
 
 pub fn http_get(url: &str) -> String {
-    let hc = reqwest::Client::new();
-    let ret = hc
-        .get(url)
-        .header("user-agent", "Mozilla/5.0")
-        .send()
+    let ret = reqwest::blocking::get(url)
         .unwrap()
         .text()
         .unwrap();
