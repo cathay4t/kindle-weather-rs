@@ -23,7 +23,7 @@ use strfmt::strfmt;
 
 const BASE_URL: &str = "http://stocks.sina.cn/fund/?code={FUND_ID}&vt=4";
 
-pub fn fund_get(fund_id: &str) -> (String, String) {
+pub fn fund_get(fund_id: &str) -> (String, String, String) {
     let mut vars = HashMap::new();
     vars.insert("FUND_ID".to_string(), format!("{}", fund_id));
     let url = strfmt(BASE_URL, &vars).unwrap();
@@ -32,13 +32,13 @@ pub fn fund_get(fund_id: &str) -> (String, String) {
     let mut fund_name = String::new();
     let mut fund_val = String::new();
     let mut fund_rat = String::new();
-    let mut fund_real = String::new();
+    //    let mut fund_real = String::new();
 
     for node in html_doc.find(Name("span")) {
         if (!fund_name.is_empty())
             && (!fund_val.is_empty())
             && (!fund_rat.is_empty())
-            && (!fund_real.is_empty())
+        //            && (!fund_real.is_empty())
         {
             break;
         }
@@ -58,18 +58,18 @@ pub fn fund_get(fund_id: &str) -> (String, String) {
         if &(node.attr("class").unwrap()[.."j_fund_valExt".len()])
             == "j_fund_valExt"
         {
-            fund_rat = node.text().to_string();
+            fund_rat = match node.text().as_str() {
+                "0.00%" => "+0.00%".into(),
+                _ => node.text().into(),
+            };
             continue;
         }
-        if &(node.attr("class").unwrap()[.."j_premium_rate".len()])
-            == "j_premium_rate"
-        {
-            fund_real = node.text().to_string();
-            continue;
-        }
+        //        if &(node.attr("class").unwrap()[.."j_premium_rate".len()])
+        //            == "j_premium_rate"
+        //        {
+        //            fund_real = node.text().to_string();
+        //            continue;
+        //        }
     }
-    (
-        fund_name,
-        format!("{} {} {}", fund_val, fund_rat, fund_real),
-    )
+    (fund_name, fund_val, fund_rat)
 }

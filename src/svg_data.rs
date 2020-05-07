@@ -23,79 +23,109 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
            <text font-size="40px" x="250" y="40" style="text-anchor:middle;">
            {TIME}
            </text>
-           <text font-size="40px" x="10" y="90">
-           AQI: {AQI} ({AQI_MAIN})
+           <text font-size="40px" x="250" y="80" style="text-anchor:middle;">
+           🌅{SUNRISE}/{SUNSET}🌛
            </text>
-           <text font-size="40px" x="10" y="140">
-           SCI: {SCI} {SCHG}
+           <text font-size="40px" x="10" y="120">
+           AQI:
            </text>
-           <text font-size="40px" x="10" y="190">
+           <text text-anchor="end" font-size="40px" x="470" y="120">
+           ({AQI_MAIN}) {AQI}
+           </text>
+           <text font-size="40px" x="10" y="170">
+           SCI:
+           </text>
+           <text text-anchor="end" font-size="40px" x="470" y="170">
+           {SCI} {SCHG}
+           </text>
+           <text font-size="40px" x="10" y="220">
            {TZ1_NAME}:
            </text>
-           <text font-size="40px" x="350" y="190">
+           <text text-anchor="end" font-size="40px" x="470" y="220">
            {TZ1_TIME}
            </text>
-           <text font-size="40px" x="10" y="240">
+           <text font-size="40px" x="10" y="270">
            {TZ2_NAME}:
            </text>
-           <text font-size="40px" x="350" y="240">
+           <text text-anchor="end" font-size="40px" x="470" y="270">
            {TZ2_TIME}
            </text>
-           <text font-size="40px" x="10" y="290">
-           Sunrise:
+           <text font-size="40px" x="10" y="320">
+           {FUND0_NAME}
            </text>
-           <text font-size="40px" x="350" y="290">
-           {SUNRISE}
+           <text text-anchor="start" font-size="40px" x="10" y="370">
+           {FUND0_VALUE}
            </text>
-           <text font-size="40px" x="10" y="340">
-           Sunset:
+           <text text-anchor="end" font-size="40px" x="470" y="370">
+           {FUND0_RATE}
            </text>
-           <text font-size="40px" x="350" y="340">
-           {SUNSET}
-           </text>
-           <text font-size="40px" x="10" y="390">
+           <text font-size="40px" x="10" y="420">
            {FUND1_NAME}
            </text>
-           <text font-size="40px" x="10" y="440">
+           <text text-anchor="start" font-size="40px" x="10" y="470">
            {FUND1_VALUE}
            </text>
-           <text font-size="40px" x="10" y="490">
+           <text text-anchor="end" font-size="40px" x="470" y="470">
+           {FUND1_RATE}
+           </text>
+           <text font-size="40px" x="10" y="520">
            {FUND2_NAME}
            </text>
-           <text font-size="40px" x="10" y="540">
+           <text text-anchor="start" font-size="40px" x="10" y="570">
            {FUND2_VALUE}
            </text>
+           <text text-anchor="end" font-size="40px" x="470" y="570">
+           {FUND2_RATE}
+           </text>
         </g>
-        <g transform="translate(500, 0)">
-            <text font-size="40px" x="10" y="60">
-            {DAY0} {C0}
+        <g transform="translate(500, 10)">
+            <text font-size="40px" x="10" y="40">
+            {DAY0}
             </text>
-            <text font-size="40px" x="10" y="140">
+            <text text-anchor="end" font-size="40px" x="250" y="40">
+            {C0}
+            </text>
+            <text text-anchor="middle" font-size="120px" x="60" y="160">
+            {ICON0}
+            </text>
+            <text text-anchor="end" font-size="40px" x="250" y="100">
             {H0}°C
             </text>
-            <text font-size="40px" x="150" y="140">
+            <text text-anchor="end" font-size="40px" x="250" y="180">
             {L0}°C
             </text>
         </g>
-        <g transform="translate(500, 170)">
-            <text font-size="40px" x="10" y="60">
-            {DAY1} {C1}
+        <g transform="translate(500, 200)">
+            <text font-size="40px" x="10" y="40">
+            {DAY1}
             </text>
-            <text font-size="40px" x="10" y="140">
+            <text text-anchor="end" font-size="40px" x="250" y="40">
+            {C1}
+            </text>
+            <text text-anchor="middle" font-size="120px" x="60" y="160">
+            {ICON1}
+            </text>
+            <text text-anchor="end" font-size="40px" x="250" y="100">
             {H1}°C
             </text>
-            <text font-size="40px" x="150" y="140">
+            <text text-anchor="end" font-size="40px" x="250" y="180">
             {L1}°C
             </text>
         </g>
-        <g transform="translate(500, 350)">
-            <text font-size="40px" x="10" y="60">
-            {DAY2} {C2}
+        <g transform="translate(500, 390)">
+            <text font-size="40px" x="10" y="40">
+            {DAY2}
             </text>
-            <text font-size="40px" x="10" y="140">
+            <text text-anchor="end" font-size="40px" x="250" y="40">
+            {C2}
+            </text>
+            <text text-anchor="middle" font-size="120px" x="60" y="160">
+            {ICON2}
+            </text>
+            <text text-anchor="end" font-size="40px" x="250" y="100">
             {H2}°C
             </text>
-            <text font-size="40px" x="150" y="140">
+            <text text-anchor="end" font-size="40px" x="250" y="180">
             {L2}°C
             </text>
         </g>

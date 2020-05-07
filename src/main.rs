@@ -67,6 +67,8 @@ struct KindleWeatherConfig {
     tz2: String,
     #[serde(default)]
     rotation: String,
+    #[serde(rename = "FUND0")]
+    fund0: String,
     #[serde(rename = "FUND1")]
     fund1: String,
     #[serde(rename = "FUND2")]
@@ -84,6 +86,7 @@ impl ::std::default::Default for KindleWeatherConfig {
             tz1: "".into(),
             tz2: "".into(),
             rotation: "right".into(),
+            fund0: "".into(),
             fund1: "".into(),
             fund2: "".into(),
         }
@@ -147,6 +150,9 @@ fn main() {
     vars.insert("C0".to_string(), format!("{}", weather_data[0].condition));
     vars.insert("C1".to_string(), format!("{}", weather_data[1].condition));
     vars.insert("C2".to_string(), format!("{}", weather_data[2].condition));
+    vars.insert("ICON0".to_string(), format!("{}", weather_data[0].icon));
+    vars.insert("ICON1".to_string(), format!("{}", weather_data[1].icon));
+    vars.insert("ICON2".to_string(), format!("{}", weather_data[2].icon));
     vars.insert("TZ1_NAME".to_string(), format!("{}", &cfg.tz1));
     vars.insert("TZ1_TIME".to_string(), get_time(&cfg.tz1));
     vars.insert("TZ2_NAME".to_string(), format!("{}", &cfg.tz2));
@@ -163,12 +169,18 @@ fn main() {
     );
     vars.insert("SUNRISE".to_string(), sunrise);
     vars.insert("SUNSET".to_string(), sunset);
-    let (fund1_name, fund1_value) = fund::fund_get(&cfg.fund1);
-    let (fund2_name, fund2_value) = fund::fund_get(&cfg.fund2);
+    let (fund0_name, fund0_value, fund0_rate) = fund::fund_get(&cfg.fund0);
+    let (fund1_name, fund1_value, fund1_rate) = fund::fund_get(&cfg.fund1);
+    let (fund2_name, fund2_value, fund2_rate) = fund::fund_get(&cfg.fund2);
+    vars.insert("FUND0_NAME".to_string(), fund0_name);
+    vars.insert("FUND0_VALUE".to_string(), fund0_value);
+    vars.insert("FUND0_RATE".to_string(), fund0_rate);
     vars.insert("FUND1_NAME".to_string(), fund1_name);
     vars.insert("FUND1_VALUE".to_string(), fund1_value);
+    vars.insert("FUND1_RATE".to_string(), fund1_rate);
     vars.insert("FUND2_NAME".to_string(), fund2_name);
     vars.insert("FUND2_VALUE".to_string(), fund2_value);
+    vars.insert("FUND2_RATE".to_string(), fund2_rate);
     let svg_data = strfmt(KINDLE_WEATHER_SVG, &vars).unwrap();
     let mut svg_fd =
         File::create(TMP_SVG_FILE_PATH).expect("Failed to create svg file");

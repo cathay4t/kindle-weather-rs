@@ -18,12 +18,14 @@
 use super::http::http_get;
 use chrono::Local;
 use serde_json::{Map, Value};
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct WeatherData {
     pub condition: String,
     pub temp_max: i32,
     pub temp_min: i32,
+    pub icon: String,
 }
 
 impl WeatherData {
@@ -31,6 +33,10 @@ impl WeatherData {
         let condition_string = match is_night {
             true => "cond_txt_n",
             false => "cond_txt_d",
+        };
+        let icon_code_str = match is_night {
+            true => "cond_code_n",
+            false => "cond_code_d",
         };
         WeatherData {
             condition: format!(
@@ -47,8 +53,96 @@ impl WeatherData {
                 .unwrap()
                 .parse::<i32>()
                 .unwrap(),
+            icon: get_icon(forcast[icon_code_str].as_str().unwrap()),
         }
     }
+}
+
+fn get_icon(code_str: &str) -> String {
+    let mut icon_map: HashMap<u32, String> = HashMap::new();
+    icon_map.insert(100, "☀".into());
+    icon_map.insert(101, "⛅".into());
+    icon_map.insert(102, "⛅".into());
+    icon_map.insert(103, "⛅".into());
+    icon_map.insert(104, "☁".into());
+
+    icon_map.insert(200, "🍃".into());
+    icon_map.insert(201, "🎐".into());
+    icon_map.insert(202, "🎐".into());
+    icon_map.insert(203, "🎐".into());
+    icon_map.insert(204, "🍃".into());
+    icon_map.insert(205, "🌬".into());
+    icon_map.insert(206, "🌬".into());
+    icon_map.insert(207, "🌪".into());
+    icon_map.insert(208, "🌪".into());
+    icon_map.insert(209, "🌪".into());
+    icon_map.insert(210, "🌪".into());
+    icon_map.insert(211, "🌪".into());
+    icon_map.insert(212, "🌪".into());
+    icon_map.insert(213, "🌪".into());
+
+    icon_map.insert(300, "🌦".into());
+    icon_map.insert(301, "🌦".into());
+    icon_map.insert(302, "⛈".into());
+    icon_map.insert(303, "⛈".into());
+    icon_map.insert(303, "⛈".into());
+    icon_map.insert(304, "⛈".into());
+    icon_map.insert(305, "☔".into());
+    icon_map.insert(306, "🌧".into());
+    icon_map.insert(307, "🌧".into());
+    icon_map.insert(308, "🌊".into());
+    icon_map.insert(309, "💧".into());
+    icon_map.insert(310, "⛈️".into());
+    icon_map.insert(311, "⛈️".into());
+    icon_map.insert(312, "⛈️".into());
+    icon_map.insert(313, "🌨️".into());
+    icon_map.insert(314, "🌧".into());
+    icon_map.insert(315, "🌧".into());
+    icon_map.insert(316, "🌧".into());
+    icon_map.insert(317, "🌊".into());
+    icon_map.insert(318, "🌊".into());
+    icon_map.insert(399, "☔".into());
+
+    icon_map.insert(400, "❄️".into());
+    icon_map.insert(401, "❄️".into());
+    icon_map.insert(402, "☃".into());
+    icon_map.insert(403, "☃".into());
+    icon_map.insert(404, "☃".into());
+    icon_map.insert(405, "☃".into());
+    icon_map.insert(406, "☃".into());
+    icon_map.insert(407, "☃".into());
+    icon_map.insert(408, "☃".into());
+    icon_map.insert(409, "☃".into());
+    icon_map.insert(410, "☃".into());
+    icon_map.insert(499, "☃".into());
+
+    icon_map.insert(500, "🌁".into());
+    icon_map.insert(501, "🌁".into());
+    icon_map.insert(502, "🌫".into());
+    icon_map.insert(503, "🌫".into());
+    icon_map.insert(504, "🌫".into());
+    icon_map.insert(505, "🌫".into());
+    icon_map.insert(506, "🌫".into());
+    icon_map.insert(507, "🌫".into());
+    icon_map.insert(508, "🌫".into());
+    icon_map.insert(509, "🌫".into());
+    icon_map.insert(510, "🌫".into());
+    icon_map.insert(511, "🌫".into());
+    icon_map.insert(512, "🌫".into());
+    icon_map.insert(513, "🌫".into());
+    icon_map.insert(514, "🌫".into());
+    icon_map.insert(515, "🌫".into());
+
+    icon_map.insert(900, "🌡️".into());
+    icon_map.insert(901, "☃️".into());
+
+
+    if let Ok(code) = code_str.parse::<u32>() {
+        if let Some(icon) = icon_map.get(&code) {
+            return icon.clone();
+        }
+    }
+    "❓".into()
 }
 
 static _API_URL: &str = "https://free-api.heweather.com/s6/weather/forecast";
