@@ -88,10 +88,10 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
             <text text-anchor="middle" font-size="120px" x="60" y="160">
             {ICON0}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="100">
+            <text text-anchor="end" font-size="40px" x="250" y="110">
             {H0}°C
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="180">
+            <text text-anchor="end" font-size="40px" x="250" y="170">
             {L0}°C
             </text>
         </g>
@@ -105,10 +105,10 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
             <text text-anchor="middle" font-size="120px" x="60" y="160">
             {ICON1}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="100">
+            <text text-anchor="end" font-size="40px" x="250" y="110">
             {H1}°C
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="180">
+            <text text-anchor="end" font-size="40px" x="250" y="170">
             {L1}°C
             </text>
         </g>
@@ -122,10 +122,10 @@ xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
             <text text-anchor="middle" font-size="120px" x="60" y="160">
             {ICON2}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="100">
+            <text text-anchor="end" font-size="40px" x="250" y="110">
             {H2}°C
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="180">
+            <text text-anchor="end" font-size="40px" x="250" y="170">
             {L2}°C
             </text>
         </g>
