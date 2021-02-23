@@ -150,9 +150,15 @@ fn main() {
     vars.insert("ICON0".to_string(), format!("{}", weather_data[0].icon));
     vars.insert("ICON1".to_string(), format!("{}", weather_data[1].icon));
     vars.insert("ICON2".to_string(), format!("{}", weather_data[2].icon));
-    vars.insert("TZ1_NAME".to_string(), format!("{}", &cfg.tz1));
+    vars.insert(
+        "TZ1_NAME".to_string(),
+        format!("{}", &cfg.tz1.split("/").last().unwrap()),
+    );
     vars.insert("TZ1_TIME".to_string(), get_time(&cfg.tz1));
-    vars.insert("TZ2_NAME".to_string(), format!("{}", &cfg.tz2));
+    vars.insert(
+        "TZ2_NAME".to_string(),
+        format!("{}", &cfg.tz2.split("/").last().unwrap()),
+    );
     vars.insert("TZ2_TIME".to_string(), get_time(&cfg.tz2));
     vars.insert("DAY0".to_string(), format!("{}", now.format("%a")));
     let day1 = now + Duration::days(1);
