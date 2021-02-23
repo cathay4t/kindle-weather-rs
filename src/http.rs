@@ -18,10 +18,7 @@
 use reqwest;
 
 pub fn http_get(url: &str) -> String {
-    let ret = reqwest::blocking::get(url)
-        .unwrap()
-        .text()
-        .unwrap();
+    let ret = reqwest::blocking::get(url).unwrap().text().unwrap();
     println!("url {}", url);
     ret.to_string()
 }

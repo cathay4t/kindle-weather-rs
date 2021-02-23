@@ -35,8 +35,8 @@ extern crate strfmt;
 extern crate toml;
 
 use aqi::aqi_get;
-use chrono::Local;
 use chrono::Duration;
+use chrono::Local;
 use chrono_tz::Tz;
 use clap::{App, Arg};
 use sci::sci_get;
@@ -65,7 +65,7 @@ struct KindleWeatherConfig {
     tz1: String,
     #[serde(rename = "TZ2")]
     tz2: String,
-    #[serde(default)]
+    #[serde(default = "default_rotation")]
     rotation: String,
     #[serde(rename = "FUND0")]
     fund0: String,
@@ -122,15 +122,12 @@ fn main() {
     fd.read_to_string(&mut contents)
         .expect("Failed to read config file");
 
-    let cfg: KindleWeatherConfig =
-        toml::from_str(&contents).expect("Failed to parse config file");
+    let cfg: KindleWeatherConfig = toml::from_str(&contents).expect("Failed to parse config file");
 
     let now = Local::now();
-    let weather_data =
-        weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
+    let weather_data = weather_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
     let mut vars = HashMap::new();
-    let (aqi, aqi_main) =
-        aqi_get(&cfg.aqicn_key, &cfg.longtitude, &cfg.latitude);
+    let (aqi, aqi_main) = aqi_get(&cfg.aqicn_key, &cfg.longtitude, &cfg.latitude);
     vars.insert("AQI".to_string(), format!("{}", aqi));
     vars.insert("AQI_MAIN".to_string(), format!("{}", aqi_main));
     let sci_data = sci_get();
@@ -162,11 +159,8 @@ fn main() {
     vars.insert("DAY1".to_string(), format!("{}", day1.format("%a")));
     let day2 = now + Duration::days(2);
     vars.insert("DAY2".to_string(), format!("{}", day2.format("%a")));
-    let (sunrise, sunset) = sun::sun_rise_set_get(
-        &cfg.heweather_key,
-        &cfg.longtitude,
-        &cfg.latitude,
-    );
+    let (sunrise, sunset) =
+        sun::sun_rise_set_get(&cfg.heweather_key, &cfg.longtitude, &cfg.latitude);
     vars.insert("SUNRISE".to_string(), sunrise);
     vars.insert("SUNSET".to_string(), sunset);
     let (fund0_name, fund0_value, fund0_rate) = fund::fund_get(&cfg.fund0);
@@ -182,8 +176,7 @@ fn main() {
     vars.insert("FUND2_VALUE".to_string(), fund2_value);
     vars.insert("FUND2_RATE".to_string(), fund2_rate);
     let svg_data = strfmt(KINDLE_WEATHER_SVG, &vars).unwrap();
-    let mut svg_fd =
-        File::create(TMP_SVG_FILE_PATH).expect("Failed to create svg file");
+    let mut svg_fd = File::create(TMP_SVG_FILE_PATH).expect("Failed to create svg file");
     svg_fd.write_all(svg_data.as_bytes()).unwrap();
     Command::new("rsvg-convert")
         .args(&[
@@ -201,6 +194,7 @@ fn main() {
     let rotation_degree: &str = match cfg.rotation.as_ref() {
         "right" => "270",
         "left" => "90",
+        "no" => "0",
         _ => panic!("Invalid rotation configuration"),
     };
     Command::new("convert")
@@ -213,4 +207,8 @@ fn main() {
         .status()
         .expect("Failed to run convert");
     println!("{}", &cfg.output_file);
+}
+
+fn default_rotation() -> String {
+    "no".to_string()
 }

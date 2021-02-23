@@ -23,6 +23,8 @@ use strfmt::strfmt;
 
 const BASE_URL: &str = "http://stocks.sina.cn/fund/?code={FUND_ID}&vt=4";
 
+const FUND_NAME_MAX_LEN: usize = 10;
+
 pub fn fund_get(fund_id: &str) -> (String, String, String) {
     let mut vars = HashMap::new();
     vars.insert("FUND_ID".to_string(), format!("{}", fund_id));
@@ -35,9 +37,7 @@ pub fn fund_get(fund_id: &str) -> (String, String, String) {
     //    let mut fund_real = String::new();
 
     for node in html_doc.find(Name("span")) {
-        if (!fund_name.is_empty())
-            && (!fund_val.is_empty())
-            && (!fund_rat.is_empty())
+        if (!fund_name.is_empty()) && (!fund_val.is_empty()) && (!fund_rat.is_empty())
         //            && (!fund_real.is_empty())
         {
             break;
@@ -49,15 +49,11 @@ pub fn fund_get(fund_id: &str) -> (String, String, String) {
             fund_name = node.text().to_string();
             continue;
         }
-        if &(node.attr("class").unwrap()[.."j_fund_value".len()])
-            == "j_fund_value"
-        {
+        if &(node.attr("class").unwrap()[.."j_fund_value".len()]) == "j_fund_value" {
             fund_val = node.text().to_string();
             continue;
         }
-        if &(node.attr("class").unwrap()[.."j_fund_valExt".len()])
-            == "j_fund_valExt"
-        {
+        if &(node.attr("class").unwrap()[.."j_fund_valExt".len()]) == "j_fund_valExt" {
             fund_rat = match node.text().as_str() {
                 "0.00%" => "+0.00%".into(),
                 _ => node.text().into(),
@@ -71,5 +67,13 @@ pub fn fund_get(fund_id: &str) -> (String, String, String) {
         //            continue;
         //        }
     }
-    (fund_name, fund_val, fund_rat)
+    (
+        fund_name
+            .chars()
+            .into_iter()
+            .take(FUND_NAME_MAX_LEN)
+            .collect(),
+        fund_val,
+        fund_rat,
+    )
 }

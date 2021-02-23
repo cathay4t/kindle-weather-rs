@@ -39,20 +39,9 @@ impl WeatherData {
             false => "cond_code_d",
         };
         WeatherData {
-            condition: format!(
-                "{}",
-                forcast[condition_string].as_str().unwrap()
-            ),
-            temp_max: forcast["tmp_max"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
-            temp_min: forcast["tmp_min"]
-                .as_str()
-                .unwrap()
-                .parse::<i32>()
-                .unwrap(),
+            condition: format!("{}", forcast[condition_string].as_str().unwrap()),
+            temp_max: forcast["tmp_max"].as_str().unwrap().parse::<i32>().unwrap(),
+            temp_min: forcast["tmp_min"].as_str().unwrap().parse::<i32>().unwrap(),
             icon: get_icon(forcast[icon_code_str].as_str().unwrap()),
         }
     }
@@ -136,7 +125,6 @@ fn get_icon(code_str: &str) -> String {
     icon_map.insert(900, "🌡️".into());
     icon_map.insert(901, "☃️".into());
 
-
     if let Ok(code) = code_str.parse::<u32>() {
         if let Some(icon) = icon_map.get(&code) {
             return icon.clone();
@@ -147,11 +135,7 @@ fn get_icon(code_str: &str) -> String {
 
 static _API_URL: &str = "https://free-api.heweather.com/s6/weather/forecast";
 
-pub fn weather_get(
-    api_key: &str,
-    longtitude: &str,
-    latitude: &str,
-) -> [WeatherData; 3] {
+pub fn weather_get(api_key: &str, longtitude: &str, latitude: &str) -> [WeatherData; 3] {
     let url = format!(
         "{API_URL}?location={LON},{LAT}&key={KEY}&lang=zh",
         API_URL = _API_URL,
@@ -160,8 +144,7 @@ pub fn weather_get(
         KEY = api_key,
     );
 
-    let ret: Map<String, Value> =
-        serde_json::from_str(&http_get(&url)).unwrap();
+    let ret: Map<String, Value> = serde_json::from_str(&http_get(&url)).unwrap();
     let forcasts = ret["HeWeather6"][0]["daily_forecast"].as_array().unwrap();
     let now = Local::now();
     let night = Local::today().and_hms(17, 0, 0);

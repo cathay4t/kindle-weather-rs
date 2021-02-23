@@ -18,14 +18,9 @@
 use super::http::http_get;
 use serde_json::{Map, Value};
 
-static _API_URL: &str =
-    "https://free-api.heweather.net/s6/solar/sunrise-sunset";
+static _API_URL: &str = "https://free-api.heweather.net/s6/solar/sunrise-sunset";
 
-pub fn sun_rise_set_get(
-    api_key: &str,
-    longtitude: &str,
-    latitude: &str,
-) -> (String, String) {
+pub fn sun_rise_set_get(api_key: &str, longtitude: &str, latitude: &str) -> (String, String) {
     let url = format!(
         "{API_URL}?location={LON},{LAT}&key={KEY}&lang=en",
         API_URL = _API_URL,
@@ -34,9 +29,10 @@ pub fn sun_rise_set_get(
         KEY = api_key,
     );
 
-    let ret: Map<String, Value> =
-        serde_json::from_str(&http_get(&url)).unwrap();
+    let ret: Map<String, Value> = serde_json::from_str(&http_get(&url)).unwrap();
     let sunrise_sunset = &ret["HeWeather6"][0]["sunrise_sunset"][0];
-    (sunrise_sunset["sr"].as_str().unwrap().into(),
-     sunrise_sunset["ss"].as_str().unwrap().into())
+    (
+        sunrise_sunset["sr"].as_str().unwrap().into(),
+        sunrise_sunset["ss"].as_str().unwrap().into(),
+    )
 }

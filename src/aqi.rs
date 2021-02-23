@@ -20,11 +20,7 @@ use serde_json::{Map, Value};
 
 static _API_URL: &str = "http://api.waqi.info/feed";
 
-pub fn aqi_get(
-    api_key: &str,
-    longtitude: &str,
-    latitude: &str,
-) -> (u32, String) {
+pub fn aqi_get(api_key: &str, longtitude: &str, latitude: &str) -> (u32, String) {
     let url = format!(
         "{API_URL}/geo:{LAT};{LON}/?token={KEY}",
         API_URL = _API_URL,
