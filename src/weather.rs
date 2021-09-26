@@ -31,17 +31,17 @@ pub struct WeatherData {
 impl WeatherData {
     fn new_from_he_forcast(forcast: &Value, is_night: bool) -> WeatherData {
         let condition_string = match is_night {
-            true => "cond_txt_n",
-            false => "cond_txt_d",
+            true => "textNight",
+            false => "textDay",
         };
         let icon_code_str = match is_night {
-            true => "cond_code_n",
-            false => "cond_code_d",
+            true => "iconNight",
+            false => "iconDay",
         };
         WeatherData {
             condition: format!("{}", forcast[condition_string].as_str().unwrap()),
-            temp_max: forcast["tmp_max"].as_str().unwrap().parse::<i32>().unwrap(),
-            temp_min: forcast["tmp_min"].as_str().unwrap().parse::<i32>().unwrap(),
+            temp_max: forcast["tempMax"].as_str().unwrap().parse::<i32>().unwrap(),
+            temp_min: forcast["tempMin"].as_str().unwrap().parse::<i32>().unwrap(),
             icon: get_icon(forcast[icon_code_str].as_str().unwrap()),
         }
     }
@@ -133,7 +133,7 @@ fn get_icon(code_str: &str) -> String {
     "❓".into()
 }
 
-static _API_URL: &str = "https://free-api.heweather.com/s6/weather/forecast";
+static _API_URL: &str = "https://devapi.qweather.com/v7/weather/3d";
 
 pub fn weather_get(api_key: &str, longtitude: &str, latitude: &str) -> [WeatherData; 3] {
     let url = format!(
@@ -145,7 +145,7 @@ pub fn weather_get(api_key: &str, longtitude: &str, latitude: &str) -> [WeatherD
     );
 
     let ret: Map<String, Value> = serde_json::from_str(&http_get(&url)).unwrap();
-    let forcasts = ret["HeWeather6"][0]["daily_forecast"].as_array().unwrap();
+    let forcasts = ret["daily"].as_array().unwrap();
     let now = Local::now();
     let night = Local::today().and_hms(17, 0, 0);
 

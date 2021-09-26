@@ -15,10 +15,15 @@
 //
 // Author: Gris Ge <cnfourt@gmail.com>
 
-use reqwest;
-
 pub fn http_get(url: &str) -> String {
-    let ret = reqwest::blocking::get(url).unwrap().text().unwrap();
+    let client = reqwest::blocking::Client::builder()
+        .gzip(true)
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .unwrap();
+
+    let ret = client.get(url).send().unwrap().text().unwrap();
     println!("url {}", url);
-    ret.to_string()
+    let s = ret.to_string();
+    s
 }
