@@ -23,7 +23,7 @@ use strfmt::strfmt;
 
 const BASE_URL: &str = "http://stocks.sina.cn/fund/?code={FUND_ID}&vt=4";
 
-const FUND_NAME_MAX_LEN: usize = 10;
+const FUND_NAME_MAX_LEN: usize = 14;
 
 pub fn fund_get(fund_id: &str) -> (String, String, String) {
     let mut vars = HashMap::new();

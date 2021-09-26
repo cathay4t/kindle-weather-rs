@@ -16,116 +16,118 @@
 // Author: Gris Ge <cnfourt@gmail.com>
 
 pub static KINDLE_WEATHER_SVG: &str = r###"<svg
-xmlns="http://www.w3.org/2000/svg" height="600" width="800" version="1.1"
+xmlns="http://www.w3.org/2000/svg" height="768" width="1024" version="1.1"
      xmlns:xlink="http://www.w3.org/1999/xlink">
     <g font-family="DejaVu Sans" style="text-anchor:start;">
-        <g>
-           <text font-size="40px" x="250" y="40" style="text-anchor:middle;">
-           {TIME}
-           </text>
-           <text font-size="40px" x="250" y="80" style="text-anchor:middle;">
-           🌅{SUNRISE}/{SUNSET}🌛
-           </text>
-           <text font-size="40px" x="10" y="120">
-           AQI:
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="120">
-           ({AQI_MAIN}) {AQI}
-           </text>
-           <text font-size="40px" x="10" y="170">
-           SCI:
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="170">
-           {SCI} {SCHG}
-           </text>
-           <text font-size="40px" x="10" y="220">
-           {TZ1_NAME}:
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="220">
-           {TZ1_TIME}
-           </text>
-           <text font-size="40px" x="10" y="270">
-           {TZ2_NAME}:
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="270">
-           {TZ2_TIME}
-           </text>
-           <text font-size="40px" x="10" y="320">
-           {FUND0_NAME}
-           </text>
-           <text text-anchor="start" font-size="40px" x="10" y="370">
-           {FUND0_VALUE}
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="370">
-           {FUND0_RATE}
-           </text>
-           <text font-size="40px" x="10" y="420">
-           {FUND1_NAME}
-           </text>
-           <text text-anchor="start" font-size="40px" x="10" y="470">
-           {FUND1_VALUE}
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="470">
-           {FUND1_RATE}
-           </text>
-           <text font-size="40px" x="10" y="520">
-           {FUND2_NAME}
-           </text>
-           <text text-anchor="start" font-size="40px" x="10" y="570">
-           {FUND2_VALUE}
-           </text>
-           <text text-anchor="end" font-size="40px" x="470" y="570">
-           {FUND2_RATE}
-           </text>
+        <g transform="translate(10, 10)">
+            <g>
+               <text font-size="55px" x="300" y="60" style="text-anchor:middle;">
+               {TIME}
+               </text>
+               <text font-size="55px" x="300" y="120" style="text-anchor:middle;">
+               🌅{SUNRISE}/{SUNSET}🌛
+               </text>
+               <text font-size="55px" x="10" y="180">
+               AQI:
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="180">
+               ({AQI_MAIN}) {AQI}
+               </text>
+               <text font-size="55px" x="10" y="240">
+               SCI:
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="240">
+               {SCI} {SCHG}
+               </text>
+               <text font-size="55px" x="10" y="300">
+               {TZ1_NAME}:
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="300">
+               {TZ1_TIME}
+               </text>
+               <text font-size="55px" x="10" y="360">
+               {TZ2_NAME}:
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="360">
+               {TZ2_TIME}
+               </text>
+               <text font-size="55px" x="10" y="420">
+               {FUND0_NAME}
+               </text>
+               <text text-anchor="start" font-size="55px" x="10" y="480">
+               {FUND0_VALUE}
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="480">
+               {FUND0_RATE}
+               </text>
+               <text font-size="55px" x="10" y="540">
+               {FUND1_NAME}
+               </text>
+               <text text-anchor="start" font-size="55px" x="10" y="600">
+               {FUND1_VALUE}
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="600">
+               {FUND1_RATE}
+               </text>
+               <text font-size="55px" x="10" y="660">
+               {FUND2_NAME}
+               </text>
+               <text text-anchor="start" font-size="55px" x="10" y="720">
+               {FUND2_VALUE}
+               </text>
+               <text text-anchor="end" font-size="55px" x="600" y="720">
+               {FUND2_RATE}
+               </text>
+            </g>
         </g>
-        <g transform="translate(500, 10)">
-            <text font-size="40px" x="10" y="40">
+        <g transform="translate(660, 20)">
+            <text font-size="55px" x="10" y="50">
             {DAY0}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="40">
+            <text text-anchor="end" font-size="40px" x="300" y="50">
             {C0}
             </text>
-            <text text-anchor="middle" font-size="120px" x="60" y="160">
+            <text text-anchor="middle" font-size="140px" x="60" y="190">
             {ICON0}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="110">
+            <text text-anchor="end" font-size="55px" x="300" y="120">
             {H0}°C
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="170">
+            <text text-anchor="end" font-size="55px" x="300" y="190">
             {L0}°C
             </text>
         </g>
-        <g transform="translate(500, 200)">
-            <text font-size="40px" x="10" y="40">
+        <g transform="translate(660, 270)">
+            <text font-size="55px" x="10" y="50">
             {DAY1}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="40">
+            <text text-anchor="end" font-size="40px" x="300" y="50">
             {C1}
             </text>
-            <text text-anchor="middle" font-size="120px" x="60" y="160">
+            <text text-anchor="middle" font-size="140px" x="60" y="190">
             {ICON1}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="110">
+            <text text-anchor="end" font-size="55px" x="300" y="120">
             {H1}°C
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="170">
+            <text text-anchor="end" font-size="55px" x="300" y="190">
             {L1}°C
             </text>
         </g>
-        <g transform="translate(500, 390)">
-            <text font-size="40px" x="10" y="40">
+        <g transform="translate(660, 520)">
+            <text font-size="55px" x="10" y="50">
             {DAY2}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="40">
+            <text text-anchor="end" font-size="40px" x="300" y="50">
             {C2}
             </text>
-            <text text-anchor="middle" font-size="120px" x="60" y="160">
+            <text text-anchor="middle" font-size="140px" x="60" y="190">
             {ICON2}
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="110">
+            <text text-anchor="end" font-size="55px" x="300" y="120">
             {H2}°C
             </text>
-            <text text-anchor="end" font-size="40px" x="250" y="170">
+            <text text-anchor="end" font-size="55px" x="300" y="190">
             {L2}°C
             </text>
         </g>
