@@ -3,6 +3,8 @@ paper white 2 to display.
 
 
 Workflow:
+ * Install [ttf-twemoji-color][1] font. (You might also need to remove google
+   noto emoji font which cause rsvg-convert not working properly)
  * Jeal break your kindle.
  * Install USBNET and enable password-less authentication via WIFI.
  * `cargo install --path .` from this project.
@@ -36,3 +38,5 @@ ssh root@pw2 /usr/sbin/eips -f -g /tmp/weather.png
 ```
 0,30 * * * * fge /home/fge/bin/pw2_weather.sh 1>/dev/null 2>/dev/null
 ```
+
+[1]: https://github.com/eosrei/twemoji-color-font
