@@ -25,7 +25,7 @@ xmlns="http://www.w3.org/2000/svg" height="768" width="1024" version="1.1"
                {TIME}
                </text>
                <text font-size="55px" x="300" y="120" style="text-anchor:middle;">
-               🌅{SUNRISE}/{SUNSET}🌛
+               🌅 {SUNRISE}/{SUNSET}🌛
                </text>
                <text font-size="55px" x="10" y="180">
                AQI:
