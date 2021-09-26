@@ -90,6 +90,8 @@ fn get_icon(code_str: &str) -> String {
     icon_map.insert(316, "🌧".into());
     icon_map.insert(317, "🌊".into());
     icon_map.insert(318, "🌊".into());
+    icon_map.insert(350, "🌦️".into());
+    icon_map.insert(351, "🌦️".into());
     icon_map.insert(399, "☔".into());
 
     icon_map.insert(400, "❄️".into());
@@ -127,10 +129,13 @@ fn get_icon(code_str: &str) -> String {
 
     if let Ok(code) = code_str.parse::<u32>() {
         if let Some(icon) = icon_map.get(&code) {
-            return icon.clone();
+            icon.clone()
+        } else {
+            format!("{}", code)
         }
+    } else {
+        "❓".into()
     }
-    "❓".into()
 }
 
 static _API_URL: &str = "https://devapi.qweather.com/v7/weather/3d";
