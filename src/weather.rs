@@ -54,6 +54,11 @@ fn get_icon(code_str: &str) -> String {
     icon_map.insert(102, "⛅".into());
     icon_map.insert(103, "⛅".into());
     icon_map.insert(104, "☁".into());
+    icon_map.insert(150, "🌙".into());
+    icon_map.insert(151, "☁".into());
+    icon_map.insert(152, "☁".into());
+    icon_map.insert(153, "☁".into());
+    icon_map.insert(154, "☁".into());
 
     icon_map.insert(200, "🍃".into());
     icon_map.insert(201, "🎐".into());
