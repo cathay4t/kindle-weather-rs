@@ -39,9 +39,20 @@ impl WeatherData {
             false => "iconDay",
         };
         WeatherData {
-            condition: format!("{}", forcast[condition_string].as_str().unwrap()),
-            temp_max: forcast["tempMax"].as_str().unwrap().parse::<i32>().unwrap(),
-            temp_min: forcast["tempMin"].as_str().unwrap().parse::<i32>().unwrap(),
+            condition: format!(
+                "{}",
+                forcast[condition_string].as_str().unwrap()
+            ),
+            temp_max: forcast["tempMax"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
+            temp_min: forcast["tempMin"]
+                .as_str()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
             icon: get_icon(forcast[icon_code_str].as_str().unwrap()),
         }
     }
@@ -145,7 +156,11 @@ fn get_icon(code_str: &str) -> String {
 
 static _API_URL: &str = "https://devapi.qweather.com/v7/weather/3d";
 
-pub fn weather_get(api_key: &str, longtitude: &str, latitude: &str) -> [WeatherData; 3] {
+pub fn weather_get(
+    api_key: &str,
+    longtitude: &str,
+    latitude: &str,
+) -> [WeatherData; 3] {
     let url = format!(
         "{API_URL}?location={LON},{LAT}&key={KEY}&lang=zh",
         API_URL = _API_URL,
@@ -154,7 +169,8 @@ pub fn weather_get(api_key: &str, longtitude: &str, latitude: &str) -> [WeatherD
         KEY = api_key,
     );
 
-    let ret: Map<String, Value> = serde_json::from_str(&http_get(&url)).unwrap();
+    let ret: Map<String, Value> =
+        serde_json::from_str(&http_get(&url)).unwrap();
     let forcasts = ret["daily"].as_array().unwrap();
     let now = Local::now();
     let night = Local::today().and_hms(17, 0, 0);

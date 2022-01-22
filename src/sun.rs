@@ -20,7 +20,11 @@ use serde_json::{Map, Value};
 
 static _API_URL: &str = "https://devapi.qweather.com/v7/astronomy/sun";
 
-pub fn sun_rise_set_get(api_key: &str, longtitude: &str, latitude: &str) -> (String, String) {
+pub fn sun_rise_set_get(
+    api_key: &str,
+    longtitude: &str,
+    latitude: &str,
+) -> (String, String) {
     let url = format!(
         "{API_URL}?location={LON},{LAT}&key={KEY}&lang=en&date={DAY}",
         API_URL = _API_URL,
@@ -30,7 +34,8 @@ pub fn sun_rise_set_get(api_key: &str, longtitude: &str, latitude: &str) -> (Str
         DAY = chrono::offset::Local::today().format("%Y%m%d")
     );
 
-    let ret: Map<String, Value> = serde_json::from_str(&http_get(&url)).unwrap();
+    let ret: Map<String, Value> =
+        serde_json::from_str(&http_get(&url)).unwrap();
     (
         qweather_time_to_hour_minute(ret["sunrise"].as_str().unwrap()),
         qweather_time_to_hour_minute(ret["sunset"].as_str().unwrap()),

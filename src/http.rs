@@ -15,10 +15,23 @@
 //
 // Author: Gris Ge <cnfourt@gmail.com>
 
-pub fn http_get(url: &str) -> String {
+pub(crate) fn http_get(url: &str) -> String {
+    http_get_with_referer(url, None)
+}
+
+pub(crate) fn http_get_with_referer(
+    url: &str,
+    reference: Option<&str>,
+) -> String {
+    let mut headers = reqwest::header::HeaderMap::new();
+    if let Some(reference) = reference {
+        headers.insert("Referer", reference.parse().unwrap());
+    }
+
     let client = reqwest::blocking::Client::builder()
         .gzip(true)
         .timeout(std::time::Duration::from_secs(10))
+        .default_headers(headers)
         .build()
         .unwrap();
 

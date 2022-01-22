@@ -15,12 +15,15 @@
 //
 // Author: Gris Ge <cnfourt@gmail.com>
 
-use super::http::http_get;
+use super::http::http_get_with_referer;
 
-static _API_URL: &str = "http://hq.sinajs.cn/list=sh000001";
+static _API_URL: &str = "https://w.sinajs.cn/list=sh000001";
 
 pub fn sci_get() -> [f32; 2] {
-    let txt = http_get(_API_URL);
+    let txt = http_get_with_referer(
+        _API_URL,
+        Some("http://quotes.sina.cn/hs/company/quotes/view/sh000001"),
+    );
     let info: Vec<&str> = txt.split(',').collect();
     let cur: f32 = info[3].parse().unwrap();
     let pre: f32 = info[2].parse().unwrap();

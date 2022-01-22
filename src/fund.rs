@@ -37,7 +37,9 @@ pub fn fund_get(fund_id: &str) -> (String, String, String) {
     //    let mut fund_real = String::new();
 
     for node in html_doc.find(Name("span")) {
-        if (!fund_name.is_empty()) && (!fund_val.is_empty()) && (!fund_rat.is_empty())
+        if (!fund_name.is_empty())
+            && (!fund_val.is_empty())
+            && (!fund_rat.is_empty())
         //            && (!fund_real.is_empty())
         {
             break;
@@ -49,11 +51,15 @@ pub fn fund_get(fund_id: &str) -> (String, String, String) {
             fund_name = node.text().to_string();
             continue;
         }
-        if &(node.attr("class").unwrap()[.."j_fund_value".len()]) == "j_fund_value" {
+        if &(node.attr("class").unwrap()[.."j_fund_value".len()])
+            == "j_fund_value"
+        {
             fund_val = node.text().to_string();
             continue;
         }
-        if &(node.attr("class").unwrap()[.."j_fund_valExt".len()]) == "j_fund_valExt" {
+        if &(node.attr("class").unwrap()[.."j_fund_valExt".len()])
+            == "j_fund_valExt"
+        {
             fund_rat = match node.text().as_str() {
                 "0.00%" => "+0.00%".into(),
                 _ => node.text().into(),
