@@ -38,7 +38,6 @@ use aqi::aqi_get;
 use chrono::Duration;
 use chrono::Local;
 use chrono_tz::Tz;
-use clap::{App, Arg};
 use sci::sci_get;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -105,17 +104,20 @@ fn main() {
         None => panic!("Failed to get $HOME path"),
     };
     let default_cfg_path = format!("{}/.config/kindle_weather.cfg", home_path);
-    let matches = App::new("kindle_weather")
+    let matches = clap::Command::new("kindle_weather")
         .version("0.1")
         .author("Gris Ge <cnfourt@gmail.com>")
         .about("CLI utile for generating weather PNG for kindle")
         .arg(
-            Arg::from_usage("--cfg=[CFG_PATH] 'The path of config file'")
-                .default_value(&default_cfg_path),
+            clap::Arg::new("CFG_PATH")
+                .long("cfg")
+                .takes_value(true)
+                .default_value(&default_cfg_path)
+                .help("The path of config file"),
         )
         .get_matches();
 
-    let cfg_path = matches.value_of("cfg").expect("BUG on --cfg argument");
+    let cfg_path = matches.value_of("CFG_PATH").expect("BUG on --cfg argument");
 
     let mut fd = File::open(cfg_path).expect("Failed to open config file");
     let mut contents = String::new();
