@@ -40,3 +40,28 @@ pub(crate) fn http_get_with_referer(
     let s = ret.to_string();
     s
 }
+
+pub(crate) fn http_post(url: &str, data: &str) -> String {
+    let mut headers = reqwest::header::HeaderMap::new();
+    headers.insert(
+        "Content-Type",
+        "application/x-www-form-urlencoded; charset=UTF-8"
+            .parse()
+            .unwrap(),
+    );
+    let client = reqwest::blocking::Client::builder()
+        .gzip(false)
+        .timeout(std::time::Duration::from_secs(10))
+        .default_headers(headers)
+        .build()
+        .unwrap();
+    let ret = client
+        .post(url)
+        .body(data.to_string())
+        .send()
+        .unwrap()
+        .text()
+        .unwrap();
+    println!("Post url {url} with data {data}");
+    ret.to_string()
+}

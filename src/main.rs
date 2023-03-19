@@ -23,17 +23,6 @@ mod sun;
 mod svg_data;
 mod weather;
 
-extern crate chrono;
-extern crate chrono_tz;
-extern crate clap;
-extern crate dirs;
-extern crate reqwest;
-extern crate select;
-extern crate serde;
-extern crate serde_json;
-extern crate strfmt;
-extern crate toml;
-
 use aqi::aqi_get;
 use chrono::Duration;
 use chrono::Local;

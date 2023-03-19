@@ -15,71 +15,65 @@
 //
 // Author: Gris Ge <cnfourt@gmail.com>
 
-use super::http::http_get;
-use select::document::Document;
-use select::predicate::Name;
 use std::collections::HashMap;
-use strfmt::strfmt;
 
-const BASE_URL: &str = "http://stocks.sina.cn/fund/?code={FUND_ID}&vt=4";
+use serde::Deserialize;
+
+use crate::http::http_post;
+
+const API_URL: &str = "https://fund.sina.com.cn/fund/api/fundDetail";
 
 const FUND_NAME_MAX_LEN: usize = 14;
 
-pub fn fund_get(fund_id: &str) -> (String, String, String) {
-    let mut vars = HashMap::new();
-    vars.insert("FUND_ID".to_string(), format!("{}", fund_id));
-    let url = strfmt(BASE_URL, &vars).unwrap();
-    let html_txt = http_get(&url);
-    let html_doc = Document::from(html_txt.as_ref());
-    let mut fund_name = String::new();
-    let mut fund_val = String::new();
-    let mut fund_rat = String::new();
-    //    let mut fund_real = String::new();
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+struct SinaFundReply {
+    code: i32,
+    msg: String,
+    data: SinaFundData,
+}
 
-    for node in html_doc.find(Name("span")) {
-        if (!fund_name.is_empty())
-            && (!fund_val.is_empty())
-            && (!fund_rat.is_empty())
-        //            && (!fund_real.is_empty())
-        {
-            break;
-        }
-        if node.attr("class") == None {
-            continue;
-        }
-        if node.attr("class").unwrap() == "fund_name" {
-            fund_name = node.text().to_string();
-            continue;
-        }
-        if &(node.attr("class").unwrap()[.."j_fund_value".len()])
-            == "j_fund_value"
-        {
-            fund_val = node.text().to_string();
-            continue;
-        }
-        if &(node.attr("class").unwrap()[.."j_fund_valExt".len()])
-            == "j_fund_valExt"
-        {
-            fund_rat = match node.text().as_str() {
-                "0.00%" => "+0.00%".into(),
-                _ => node.text().into(),
-            };
-            continue;
-        }
-        //        if &(node.attr("class").unwrap()[.."j_premium_rate".len()])
-        //            == "j_premium_rate"
-        //        {
-        //            fund_real = node.text().to_string();
-        //            continue;
-        //        }
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+struct SinaFundData {
+    market: SinaFundMarket,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+struct SinaFundMarket {
+    base_info: SinaFundBaseInfo,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+struct SinaFundBaseInfo {
+    fundname: String,
+    netvalue: String,
+    dayincratio: String,
+}
+
+pub fn fund_get(fund_id: &str) -> (String, String, String) {
+    let html_txt = http_post(API_URL, &format!("fundcode={fund_id}&type=4"));
+
+    let reply: SinaFundReply = serde_json::from_str(&html_txt).unwrap();
+    if reply.code != 0 {
+        eprintln!(
+            "Failed to get fund {fund_id} info: {}, {}",
+            reply.code, reply.msg
+        );
+        (fund_id.to_string(), "N/A".into(), "N/A".into())
+    } else {
+        (
+            reply.data.market.base_info.fundname,
+            reply.data.market.base_info.netvalue.to_string(),
+            format!(
+                "{}%",
+                reply
+                    .data
+                    .market
+                    .base_info
+                    .dayincratio
+                    .parse::<f64>()
+                    .unwrap()
+                    * 100.0
+            ),
+        )
     }
-    (
-        fund_name
-            .chars()
-            .into_iter()
-            .take(FUND_NAME_MAX_LEN)
-            .collect(),
-        fund_val,
-        fund_rat,
-    )
 }
