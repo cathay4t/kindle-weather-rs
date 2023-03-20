@@ -64,7 +64,7 @@ pub fn fund_get(fund_id: &str) -> (String, String, String) {
             reply.data.market.base_info.fundname,
             reply.data.market.base_info.netvalue.to_string(),
             format!(
-                "{}%",
+                "{:.2}%",
                 reply
                     .data
                     .market
